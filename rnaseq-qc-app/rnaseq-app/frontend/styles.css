@@ -1,0 +1,49 @@
+:root{
+  --bg:#0b0f14; --fg:#e6eef6; --muted:#9db0c6;
+  --card:#121821; --line:#1b2532;
+  --acc:#7cc1ff; --ok:#29e3a9; --warn:#ffd166; --bad:#ff6b6b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,Segoe UI,Roboto,Helvetica,Arial}
+
+header{position:sticky;top:0;background:rgba(11,15,20,.8);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+
+.hstack{display:flex;gap:12px;align-items:center}
+.vstack{display:flex;flex-direction:column;gap:12px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.btn{background:#172131;color:var(--fg);border:1px solid #243247;border-radius:10px;padding:10px 14px;cursor:pointer}
+.btn.primary{background:linear-gradient(180deg,#1f3350,#18263a);border-color:#2c4668}
+.btn.ghost{background:transparent}
+.btn.ok{border-color:var(--ok)}
+.btn.warn{border-color:var(--warn)}
+.btn.bad{border-color:var(--bad)}
+
+.badge{font-size:12px;border-radius:999px;padding:4px 10px;border:1px solid #253244;color:var(--muted)}
+.kpi{background:#0f1520;border:1px solid #1b2432;border-radius:14px;padding:12px}
+
+.progress{height:8px;background:#0f1520;border:1px solid #1b2432;border-radius:10px;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--acc),#b1e1ff)}
+
+.grid{display:grid;gap:16px}
+.grid.cols-2{grid-template-columns:1.2fr .8fr}
+.grid.cols-3{grid-template-columns:280px 1fr 280px}
+
+.section-title{margin:0 0 8px 0}
+.helper{color:var(--muted);font-size:13px}
+
+.fastqc-layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.fastqc-nav{background:#0f1520;border:1px solid #1b2432;border-radius:12px;padding:8px}
+.fastqc-nav ul{list-style:none;padding:0;margin:0}
+.fastqc-nav li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer}
+.fastqc-nav li:hover{background:#101a28}
+.fastqc-nav .status{font-weight:600}
+.status.ok{color:var(--ok)} .status.warn{color:var(--warn)} .status.bad{color:var(--bad)}
+
+.chart{height:320px}
+.divider{height:1px;background:var(--line);margin:10px 0}
+
+.next-wrap{display:flex;justify-content:flex-end}
+.next-btn{display:inline-flex;align-items:center;gap:8px}
+.next-btn svg{width:18px;height:18px}

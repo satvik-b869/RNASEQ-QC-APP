@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RNA-seq Pipeline Runner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { background:#0f172a; color:#e5e7eb; font-family:system-ui; margin:0; padding:32px; }
+      h1 { margin-bottom:16px; }
+      .card { background:#111827; border:1px solid #1f2937; border-radius:12px; padding:20px; max-width:900px; }
+      .row { display:flex; gap:16px; flex-wrap:wrap; }
+      input[type=text], input[type=file] {
+        background:#0b1220; color:#e5e7eb; border:1px solid #334155;
+        border-radius:8px; padding:10px 12px;
+      }
+      button {
+        background:#10b981; border:0; border-radius:10px;
+        padding:10px 16px; font-weight:700; cursor:pointer; color:#072015;
+      }
+      button:disabled { opacity:0.4; cursor:not-allowed; }
+      #barwrap { height:10px; background:#1f2937; border-radius:8px; overflow:hidden; margin-top:12px; }
+      #bar { height:10px; width:0; background:#22c55e; }
+      #status { margin-top:12px; padding:14px; background:#0b1220; border:1px solid #1f2937; border-radius:12px; min-height:300px; overflow:auto; }
+      pre { white-space:pre-wrap; }
+    </style>
+  </head>
+
+  <body>
+    <h1>RNA-seq Pipeline Runner</h1>
+
+    <div class="card">
+      <!-- Upload -->
+      <form id="upload-form" class="row">
+        <input id="sample-name" type="text" placeholder="sample name" value="sample1">
+        <input id="file-input" type="file" multiple accept=".fastq,.fq,.fastq.gz,.fq.gz">
+        <button type="submit">Upload</button>
+      </form>
+
+      <!-- Run pipeline -->
+      <div class="row" style="margin-top:16px;">
+        <button id="run-btn" disabled>Run Pipeline</button>
+        <button id="refresh-btn">Refresh</button>
+        <!-- New: View report for last run -->
+        <button id="view-report-btn" class="btn btn-secondary">View QC report</button>
+      </div>
+
+      <!-- Progress bar -->
+      <div id="barwrap"><div id="bar"></div></div>
+
+      <!-- Status JSON -->
+      <div id="status"><pre>{"tip": "Upload FASTQs then run pipeline"}</pre></div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

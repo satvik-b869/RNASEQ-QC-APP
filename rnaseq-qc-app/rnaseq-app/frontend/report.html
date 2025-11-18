@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RNA-seq QC Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- reuse your existing CSS if you have styles.css -->
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0b1020;
+      color: #e5e7eb;
+    }
+    header {
+      padding: 1rem 2rem;
+      background: #111827;
+      border-bottom: 1px solid #1f2933;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+    header a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    main {
+      padding: 1.5rem 2rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #111827;
+      border-radius: 0.75rem;
+      border: 1px solid #1f2937;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.1rem;
+      color: #f9fafb;
+    }
+    .card h3 {
+      margin: 1rem 0 0.5rem;
+      font-size: 1rem;
+      color: #e5e7eb;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+    }
+    .meta-item span.label {
+      color: #9ca3af;
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .meta-item span.value {
+      color: #e5e7eb;
+    }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 0.1rem 0.6rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .badge.running { background: #1f2937; color: #e5e7eb; }
+    .badge.finished { background: #16a34a33; color: #bbf7d0; }
+    .badge.failed { background: #b91c1c33; color: #fecaca; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      border: 1px solid #1f2937;
+      padding: 0.4rem 0.5rem;
+      text-align: left;
+    }
+    th {
+      background: #111827;
+      color: #d1d5db;
+      font-weight: 500;
+    }
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .img-grid figure {
+      margin: 0;
+      background: #030712;
+      border-radius: 0.5rem;
+      border: 1px solid #111827;
+      padding: 0.5rem;
+    }
+    .img-grid img {
+      width: 100%;
+      display: block;
+      border-radius: 0.35rem;
+    }
+    .img-grid figcaption {
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .links-row a {
+      display: inline-block;
+      margin-right: 1rem;
+      font-size: 0.85rem;
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    .links-row a:hover {
+      text-decoration: underline;
+    }
+    #errorBox {
+      color: #fecaca;
+      background: #7f1d1d33;
+      border: 1px solid #b91c1c;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RNA-seq Run Report</h1>
+    <a href="index.html">&larr; Back to pipeline</a>
+  </header>
+
+  <main>
+    <div id="errorBox"></div>
+
+    <section class="card" id="runMeta">
+      <h2>Run Overview</h2>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Job ID</span>
+          <span class="value" id="metaJobId">–</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Status</span>
+          <span class="value">
+            <span id="metaStatus" class="badge running">–</span>
+          </span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Progress</span>
+          <span class="value" id="metaProgress">–</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Created at (UTC)</span>
+          <span class="value" id="metaCreated">–</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Sample name</span>
+          <span class="value" id="metaSample">–</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Files</span>
+          <span class="value" id="metaFiles">–</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="qcSummary">
+      <h2>QC Summary</h2>
+      <h3>Pre-trim FastQC</h3>
+      <div id="preFastqcTable"></div>
+
+      <h3>Trimming (fastp)</h3>
+      <div id="fastpSummary"></div>
+
+      <h3>Post-trim FastQC</h3>
+      <div id="postFastqcTable"></div>
+    </section>
+
+    <section class="card" id="alignmentSection">
+      <h2>STAR Alignment</h2>
+      <div id="starTable"></div>
+      <div class="links-row" id="alignmentLinks"></div>
+    </section>
+
+    <section class="card" id="countsSection">
+      <h2>Counts (featureCounts)</h2>
+      <p id="countsInfo">Counts table generated with featureCounts.</p>
+      <div class="links-row" id="countsLinks"></div>
+    </section>
+
+    <section class="card" id="plotsSection">
+      <h2>FastQC Plots</h2>
+      <h3>Pre-trim</h3>
+      <div class="img-grid" id="rawPlots"></div>
+      <h3>Post-trim</h3>
+      <div class="img-grid" id="postPlots"></div>
+    </section>
+  </main>
+
+  <script src="report.js"></script>
+</body>
+</html>
