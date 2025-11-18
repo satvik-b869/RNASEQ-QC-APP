@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  backend:
+    platform: linux/amd64          # <<< force x86_64 container
+    build:
+      context: ./rnaseq-app/backend
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    environment:
+      - API_PORT=5050
+      - STORAGE_ROOT=/data/storage
+      - QC_ROOT=/data/qc
+      - STAR_GENOME_DIR=/refs/star_index
+      - GTF_PATH=/refs/genomic.gtf
+    volumes:
+      - storage:/data/storage
+      - qc:/data/qc
+      - ./refs:/refs:rw             # mount your genome + GTF read-only
+
+  frontend:
+    # platform is optional here; leaving it native is fine,
+    # but you *can* do platform: linux/amd64 if you want consistency.
+    build:
+      context: ./rnaseq-app/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "7070:80"
+    volumes:
+      - ./rnaseq-app/frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+volumes:
+  storage:
+  qc:
