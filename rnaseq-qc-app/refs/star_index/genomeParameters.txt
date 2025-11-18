@@ -1,0 +1,19 @@
+### STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /refs/star_index   --genomeFastaFiles /refs/ecoli.fa      --sjdbGTFfile /refs/ecoli.gtf   --sjdbOverhang 99
+### GstrandBit 32
+versionGenome	2.7.4a
+genomeType	Full
+genomeFastaFiles	/refs/ecoli.fa 
+genomeSAindexNbases	14
+genomeChrBinNbits	18
+genomeSAsparseD	1
+genomeTransformType	None
+genomeTransformVCF	-
+sjdbOverhang	99
+sjdbFileChrStartEnd	- 
+sjdbGTFfile	/refs/ecoli.gtf
+sjdbGTFchrPrefix	-
+sjdbGTFfeatureExon	exon
+sjdbGTFtagExonParentTranscript	transcript_id
+sjdbGTFtagExonParentGene	gene_id
+sjdbInsertSave	Basic
+genomeFileSizes	4718592 38293632
